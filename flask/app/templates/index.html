@@ -16,26 +16,36 @@
 </head>
 <body>
     <h1>Sensor Data Readings</h1>
-    <table>
+    <table id="tempTable">
         <tr>
-            <th>Sensor</th>
-            <th>Date & Time</th>
-            <th>Temp Reading</th>
+            <th>Sensor 1</th>
+            <th>Sensor 2</th>
+            <th>Sensor 3</th>
         </tr>
-        {% for reading in readings %}
-            <tr>
-                <td>
-                    {{ reading['sensor'] }}
-                </td>
-                <td>
-                    {{ reading['datetime'] }}
-                </td>
-                <td>
-                    {{ reading['temp'] }}
-                </td>
-            </tr>
-        {% endfor %}
+        <tr>
+            <th id="sensor1"></th>
+            <th id="sensor2"></th>
+            <th id="sensor3"></th>
+        </tr>
     </table>
+    <script src=""></script>
+    <script>
+        setInterval(getData, 10000);
 
+        function getData() {
+            fetch('http://127.0.0.1:5000/data')
+                .then(response => response.json())
+                .then(sensorObjects => {
+                    console.log(sensorObjects);
+                    let data = [];
+                    for(let item of sensorObjects) {
+                        data.push(item['temp']);
+                    }
+                    document.getElementById("sensor1").innerHTML = data[0];
+                    document.getElementById("sensor2").innerHTML = data[1];
+                    document.getElementById("sensor3").innerHTML = data[2];
+                })
+        }
+    </script>
 </body>
 </html>
