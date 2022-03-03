@@ -1,6 +1,7 @@
 import os
 
 import boto3
+from boto3.dynamodb.conditions import Attr
 
 
 def get_resource():
@@ -14,4 +15,25 @@ def get_all_readings():
     client = get_resource()
     table = client.Table('temp_readings')
     response = table.scan()
+    return response['Items']
+
+
+def get_item_by_id(item_id):
+    client = get_resource()
+    table = client.Table('temp_readings')
+    response = table.get_item(Key={'id': item_id})
+    return response['Item']
+
+
+def get_item_by_attribute(attribute, value):
+    client = get_resource()
+    table = client.Table('temp_readings')
+    response = table.scan(FilterExpression=Attr(attribute).eq(value))
+    return response['Items']
+
+
+def get_item_by_attribute_gt(attribute, value):
+    client = get_resource()
+    table = client.Table('temp_readings')
+    response = table.scan(FilterExpression=Attr(attribute).gt(value))
     return response['Items']
